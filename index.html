@@ -1,1 +1,1208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+<title>Just Us ❤️</title>
 
+<style>
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+html,body{
+  margin:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  font-family:Arial,Helvetica,sans-serif;
+  background:#09000b;
+  color:white;
+}
+
+body{
+  background:
+    radial-gradient(circle at 20% 20%,#5e174c 0%,transparent 35%),
+    radial-gradient(circle at 80% 80%,#32105d 0%,transparent 35%),
+    linear-gradient(135deg,#09000b,#180615,#09000e);
+}
+
+#app{
+  width:100%;
+  height:100%;
+  position:relative;
+  overflow:hidden;
+}
+
+.screen{
+  position:absolute;
+  inset:0;
+  padding:22px;
+  display:none;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  overflow-y:auto;
+}
+
+.screen.active{
+  display:flex;
+  animation:appear .45s ease;
+}
+
+@keyframes appear{
+  from{opacity:0;transform:translateX(35px)}
+  to{opacity:1;transform:translateX(0)}
+}
+
+.glow{
+  position:absolute;
+  width:250px;
+  height:250px;
+  border-radius:50%;
+  background:#ff3b9d;
+  filter:blur(100px);
+  opacity:.18;
+  pointer-events:none;
+}
+
+h1{
+  font-size:42px;
+  margin:10px 0;
+  letter-spacing:-1px;
+}
+
+h2{
+  font-size:29px;
+  margin:8px 0 14px;
+}
+
+p{
+  color:#e7cfe1;
+  line-height:1.6;
+  max-width:550px;
+}
+
+.heart{
+  font-size:76px;
+  animation:pulse 1.4s infinite;
+}
+
+@keyframes pulse{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.15)}
+}
+
+.btn{
+  border:0;
+  color:white;
+  background:linear-gradient(135deg,#ff3c91,#9b42ff);
+  padding:14px 24px;
+  border-radius:30px;
+  font-size:16px;
+  font-weight:bold;
+  margin:8px;
+  box-shadow:0 8px 25px #ff238444;
+  cursor:pointer;
+}
+
+.btn:active{
+  transform:scale(.94);
+}
+
+.secondary{
+  background:#ffffff12;
+  border:1px solid #ffffff25;
+  box-shadow:none;
+}
+
+.card{
+  width:min(520px,94vw);
+  padding:24px;
+  border-radius:28px;
+  background:#ffffff0d;
+  border:1px solid #ffffff1c;
+  backdrop-filter:blur(18px);
+  box-shadow:0 20px 60px #0008;
+}
+
+.progress{
+  position:absolute;
+  top:12px;
+  left:20px;
+  right:20px;
+  height:5px;
+  border-radius:10px;
+  background:#ffffff18;
+  overflow:hidden;
+}
+
+.progressBar{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,#ff4b9b,#b65cff);
+  transition:.4s;
+}
+
+.gameNumber{
+  color:#ff83bd;
+  font-size:13px;
+  letter-spacing:2px;
+  margin-bottom:10px;
+}
+
+.options{
+  display:grid;
+  gap:12px;
+  margin-top:18px;
+}
+
+.option{
+  width:100%;
+  border:1px solid #ffffff1d;
+  background:#ffffff0b;
+  color:white;
+  border-radius:18px;
+  padding:15px;
+  font-size:15px;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.option:hover{
+  background:#ff3c9120;
+  border-color:#ff72ae;
+}
+
+.option.correct{
+  background:#1ccf7a35;
+  border-color:#43f29b;
+}
+
+.option.wrong{
+  background:#ff315035;
+  border-color:#ff5270;
+}
+
+#floatingHearts{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  overflow:hidden;
+}
+
+.floatHeart{
+  position:absolute;
+  bottom:-30px;
+  animation:floatUp linear forwards;
+  opacity:.7;
+}
+
+@keyframes floatUp{
+  from{
+    transform:translateY(0) rotate(0);
+    opacity:0;
+  }
+  15%{opacity:.8}
+  to{
+    transform:translateY(-110vh) rotate(360deg);
+    opacity:0;
+  }
+}
+
+/* MEMORY */
+.memoryGrid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  margin:18px auto;
+  max-width:390px;
+}
+
+.mem{
+  aspect-ratio:1;
+  border:0;
+  border-radius:13px;
+  background:linear-gradient(135deg,#ff4d9c,#6f38c9);
+  color:transparent;
+  font-size:24px;
+  cursor:pointer;
+}
+
+.mem.open,.mem.done{
+  color:white;
+  background:#ffffff15;
+  border:1px solid #ffffff25;
+}
+
+/* CATCH */
+#catchArea{
+  width:min(450px,90vw);
+  height:350px;
+  position:relative;
+  overflow:hidden;
+  border:1px solid #ffffff20;
+  border-radius:25px;
+  background:#ffffff08;
+}
+
+.catchHeart{
+  position:absolute;
+  font-size:34px;
+  cursor:pointer;
+  user-select:none;
+}
+
+/* TAP */
+.tapCircle{
+  width:150px;
+  height:150px;
+  border-radius:50%;
+  background:radial-gradient(circle,#ff83bc,#ff2e88,#7416a1);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:25px;
+  font-weight:bold;
+  box-shadow:0 0 60px #ff278877;
+  cursor:pointer;
+  user-select:none;
+  margin:25px;
+}
+
+.tapCircle:active{
+  transform:scale(.9);
+}
+
+/* SLIDER */
+input[type=range]{
+  width:90%;
+  accent-color:#ff4a9e;
+}
+
+.score{
+  font-size:22px;
+  color:#ff9ac8;
+  margin:10px;
+}
+
+.loveMeter{
+  width:90%;
+  height:20px;
+  background:#ffffff14;
+  border-radius:20px;
+  overflow:hidden;
+  margin:20px;
+}
+
+.loveFill{
+  width:0%;
+  height:100%;
+  background:linear-gradient(90deg,#ff347f,#bc4cff);
+  transition:.5s;
+}
+
+textarea{
+  width:100%;
+  min-height:100px;
+  resize:none;
+  border-radius:18px;
+  border:1px solid #ffffff20;
+  background:#ffffff0b;
+  color:white;
+  padding:15px;
+  font-family:inherit;
+  outline:none;
+}
+
+.nav{
+  margin-top:18px;
+}
+
+.small{
+  font-size:12px;
+  color:#bda6b7;
+}
+
+.result{
+  font-size:25px;
+  font-weight:bold;
+  color:#ff8fc3;
+  margin:18px;
+}
+
+#musicBtn{
+  position:absolute;
+  z-index:20;
+  top:20px;
+  right:18px;
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  border:1px solid #ffffff22;
+  background:#ffffff12;
+  color:white;
+  font-size:19px;
+}
+</style>
+</head>
+
+<body>
+
+<div id="app">
+
+<button id="musicBtn">♫</button>
+
+<div id="floatingHearts"></div>
+
+<!-- INTRO -->
+<section class="screen active" id="s0">
+  <div class="glow"></div>
+  <div class="heart">❤️</div>
+  <h1>Just You & Me</h1>
+  <p>
+    A tiny little game night made for two.<br>
+    No rushing. No skipping. Just vibes, teasing,
+    memories and a little bit of trouble. 😏
+  </p>
+  <button class="btn" onclick="startGame()">Are you ready? 💗</button>
+  <p class="small">8 games • take your time</p>
+</section>
+
+<!-- GAME 1 -->
+<section class="screen" id="s1">
+  <div class="gameNumber">GAME 1 / 8</div>
+  <div class="card">
+    <h2>How well do you know me? 👀</h2>
+    <p id="q1"></p>
+    <div class="options" id="o1"></div>
+    <div class="result" id="r1"></div>
+  </div>
+  <div class="nav">
+    <button class="btn" id="next1" style="display:none" onclick="go(2)">Next ❤️</button>
+  </div>
+</section>
+
+<!-- GAME 2 MEMORY -->
+<section class="screen" id="s2">
+  <div class="gameNumber">GAME 2 / 8</div>
+  <h2>Memory Match 🧠❤️</h2>
+  <p>Find all the matching pairs.</p>
+  <div class="card">
+    <div class="memoryGrid" id="memoryGrid"></div>
+    <div class="score" id="memoryScore">Pairs: 0 / 8</div>
+  </div>
+  <button class="btn" id="next2" style="display:none" onclick="go(3)">Next 💕</button>
+</section>
+
+<!-- GAME 3 -->
+<section class="screen" id="s3">
+  <div class="gameNumber">GAME 3 / 8</div>
+  <div class="card">
+    <h2>Pick one 😏</h2>
+    <p id="flirtyQuestion"></p>
+    <div class="options" id="flirtyOptions"></div>
+    <div class="result" id="flirtyResult"></div>
+  </div>
+  <button class="btn" id="next3" style="display:none" onclick="go(4)">I'm ready for more 😏</button>
+</section>
+
+<!-- GAME 4 TAP -->
+<section class="screen" id="s4">
+  <div class="gameNumber">GAME 4 / 8</div>
+  <h2>Heart Attack ❤️‍🔥</h2>
+  <p>Tap the heart as many times as possible in 20 seconds.</p>
+  <div class="card">
+    <div class="score">Time: <span id="tapTime">20</span>s</div>
+    <div class="score">Taps: <span id="tapScore">0</span></div>
+    <div class="tapCircle" id="tapCircle">START</div>
+  </div>
+  <button class="btn" id="next4" style="display:none" onclick="go(5)">Next 🔥</button>
+</section>
+
+<!-- GAME 5 CATCH -->
+<section class="screen" id="s5">
+  <div class="gameNumber">GAME 5 / 8</div>
+  <h2>Catch My Hearts 💕</h2>
+  <p>Catch 15 hearts before they disappear.</p>
+  <div class="card">
+    <div class="score">Caught: <span id="caught">0</span> / 15</div>
+    <div id="catchArea"></div>
+  </div>
+  <button class="btn" id="next5" style="display:none" onclick="go(6)">Next 💗</button>
+</section>
+
+<!-- GAME 6 -->
+<section class="screen" id="s6">
+  <div class="gameNumber">GAME 6 / 8</div>
+  <div class="card">
+    <h2>How Dangerous Are You? 😈</h2>
+    <p>Choose honestly. No judging.</p>
+
+    <p>How flirty are you?</p>
+    <input type="range" min="0" max="100" value="80" id="flirtRange">
+
+    <p>How much do i like your attention?</p>
+    <input type="range" min="0" max="100" value="100" id="attentionRange">
+
+    <p>How easily do you i get jealous?</p>
+    <input type="range" min="0" max="100" value="99" id="jealousRange">
+
+    <button class="btn" onclick="calculateDanger()">Reveal my result 😈</button>
+    <div class="result" id="dangerResult"></div>
+  </div>
+
+  <button class="btn" id="next6" style="display:none" onclick="go(7)">Next 😏</button>
+</section>
+
+<!-- GAME 7 -->
+<section class="screen" id="s7">
+  <div class="gameNumber">GAME 7 / 8</div>
+  <div class="card">
+    <h2>Truth or Tease 💋</h2>
+    <p id="truthQuestion"></p>
+    <div class="options">
+      <button class="option" onclick="truthAnswer('truth')">Truth 😇</button>
+      <button class="option" onclick="truthAnswer('tease')">Tease 😏</button>
+    </div>
+    <div class="result" id="truthResult"></div>
+  </div>
+  <button class="btn" id="next7" style="display:none" onclick="go(8)">One last game ❤️</button>
+</section>
+
+<!-- GAME 8 -->
+<section class="screen" id="s8">
+  <div class="gameNumber">GAME 8 / 8</div>
+  <div class="card">
+    <h2>One Last Thing ❤️</h2>
+    <p>
+      Write one thing you secretly love about
+      the person you're playing this with.
+    </p>
+
+    <textarea id="finalText" placeholder="Be honest... 👀"></textarea>
+
+    <button class="btn" onclick="finish()">Seal it with a kiss 💋</button>
+
+    <div class="result" id="finalResult"></div>
+  </div>
+</section>
+
+<!-- END -->
+<section class="screen" id="end">
+  <div class="glow"></div>
+  <div class="heart">💖</div>
+  <h1>You made it!</h1>
+  <p>
+    8 games completed.<br>
+    And somehow you're still here. 😌
+  </p>
+
+  <div class="card">
+    <h2>Final Score</h2>
+    <div class="score" id="finalScore"></div>
+    <p>
+      Maybe the real prize wasn't winning...
+      maybe it was spending these few minutes together. ❤️
+    </p>
+  </div>
+
+  <button class="btn" onclick="restart()">Play Again 🔄</button>
+</section>
+
+</div>
+
+<script>
+
+/* =========================
+   GLOBAL
+========================= */
+
+let current = 0;
+let totalScore = 0;
+let audioCtx = null;
+
+const screens = document.querySelectorAll(".screen");
+
+function go(n){
+  screens.forEach(s => s.classList.remove("active"));
+
+  const target = document.getElementById("s"+n);
+
+  if(target){
+    target.classList.add("active");
+    current = n;
+    updateProgress();
+  }
+}
+
+function updateProgress(){
+
+  const bar = document.querySelector(".progressBar");
+
+  if(!bar) return;
+
+  if(current === 0){
+    bar.style.width = "0%";
+  }else{
+    bar.style.width = ((current / 8) * 100) + "%";
+  }
+}
+
+function startGame(){
+  initMusic();
+  go(1);
+}
+
+function addScore(points){
+  totalScore += points;
+}
+
+/* =========================
+   FLOATING HEARTS
+========================= */
+
+function createHeart(){
+
+  const h = document.createElement("div");
+
+  h.className = "floatHeart";
+  h.innerText = ["❤️","💗","💕","💖","💘"][Math.floor(Math.random()*5)];
+
+  h.style.left = Math.random()*100 + "%";
+  h.style.fontSize = (12 + Math.random()*20) + "px";
+  h.style.animationDuration = (5 + Math.random()*7) + "s";
+
+  document.getElementById("floatingHearts").appendChild(h);
+
+  setTimeout(()=>{
+    h.remove();
+  },12000);
+}
+
+setInterval(createHeart,900);
+
+/* =========================
+   MUSIC
+========================= */
+
+function initMusic(){
+
+  if(audioCtx) return;
+
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+  let notes = [261.63,329.63,392,329.63,293.66,349.23,440,349.23];
+
+  let i = 0;
+
+  function playNote(){
+
+    if(!audioCtx) return;
+
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+
+    osc.type = "sine";
+    osc.frequency.value = notes[i % notes.length];
+
+    gain.gain.setValueAtTime(.0001,audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(.025,audioCtx.currentTime+.05);
+    gain.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+.75);
+
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+
+    osc.start();
+    osc.stop(audioCtx.currentTime+.8);
+
+    i++;
+  }
+
+  playNote();
+  setInterval(playNote,850);
+}
+
+document.getElementById("musicBtn").onclick = function(){
+
+  if(!audioCtx){
+    initMusic();
+    return;
+  }
+
+  if(audioCtx.state === "running"){
+    audioCtx.suspend();
+    this.innerText = "🔇";
+  }else{
+    audioCtx.resume();
+    this.innerText = "♫";
+  }
+};
+
+/* =========================
+   GAME 1
+========================= */
+
+const quiz = [
+
+ {
+  q:"What would I choose for a perfect date?",
+  a:["Movie + cuddles","Long drive","Fancy dinner","Just talking all night"],
+  correct:3
+ },
+
+ {
+  q:"What gets me blushing the fastest?",
+  a:["A compliment","Eye contact","A cute text","All of these"],
+  correct:3
+ },
+
+ {
+  q:"Who would probably fall first?",
+  a:["Me","You","Both at the same time","Nobody 😭"],
+  correct:2
+ },
+
+ {
+  q:"What's more dangerous?",
+  a:["My smile","Your stare","Our chemistry","The late-night conversations"],
+  correct:2
+ }
+
+];
+
+let quizIndex = 0;
+
+function loadQuiz(){
+
+  const q = quiz[quizIndex];
+
+  document.getElementById("q1").innerText = q.q;
+
+  const box = document.getElementById("o1");
+  box.innerHTML = "";
+
+  q.a.forEach((answer,index)=>{
+
+    const b = document.createElement("button");
+
+    b.className = "option";
+    b.innerText = answer;
+
+    b.onclick = ()=>{
+
+      [...box.children].forEach(x=>x.disabled=true);
+
+      if(index === q.correct){
+
+        b.classList.add("correct");
+        document.getElementById("r1").innerText = "Okayyy, you know me 😭❤️";
+        addScore(10);
+
+      }else{
+
+        b.classList.add("wrong");
+        document.getElementById("r1").innerText = "Wrong 😏 But I'll let it slide.";
+
+      }
+
+      setTimeout(()=>{
+
+        quizIndex++;
+
+        if(quizIndex < quiz.length){
+
+          document.getElementById("r1").innerText = "";
+          loadQuiz();
+
+        }else{
+
+          document.getElementById("r1").innerText = "Quiz complete ❤️";
+          document.getElementById("next1").style.display="inline-block";
+
+        }
+
+      },800);
+
+    };
+
+    box.appendChild(b);
+  });
+}
+
+loadQuiz();
+
+/* =========================
+   GAME 2 MEMORY
+========================= */
+
+let memValues = [
+ "❤️","❤️",
+ "💋","💋",
+ "🌹","🌹",
+ "💎","💎",
+ "💕","💕",
+ "😘","😘",
+ "✨","✨",
+ "🥰","🥰"
+];
+
+let firstCard = null;
+let secondCard = null;
+let lockBoard = false;
+let pairs = 0;
+
+memValues.sort(()=>Math.random()-.5);
+
+const grid = document.getElementById("memoryGrid");
+
+memValues.forEach(value=>{
+
+  const b = document.createElement("button");
+
+  b.className = "mem";
+  b.innerText = value;
+
+  b.onclick = ()=>{
+
+    if(lockBoard || b.classList.contains("open")) return;
+
+    b.classList.add("open");
+
+    if(!firstCard){
+
+      firstCard = b;
+      return;
+    }
+
+    secondCard = b;
+    lockBoard = true;
+
+    if(firstCard.innerText === secondCard.innerText){
+
+      firstCard.classList.add("done");
+      secondCard.classList.add("done");
+
+      pairs++;
+      addScore(10);
+
+      document.getElementById("memoryScore").innerText =
+        "Pairs: "+pairs+" / 8";
+
+      resetMemory();
+
+      if(pairs === 8){
+
+        setTimeout(()=>{
+          document.getElementById("next2").style.display="inline-block";
+        },400);
+
+      }
+
+    }else{
+
+      setTimeout(()=>{
+
+        firstCard.classList.remove("open");
+        secondCard.classList.remove("open");
+
+        resetMemory();
+
+      },650);
+    }
+  };
+
+  grid.appendChild(b);
+});
+
+function resetMemory(){
+
+  firstCard=null;
+  secondCard=null;
+  lockBoard=false;
+
+}
+
+/* =========================
+   GAME 3 FLIRTY
+========================= */
+
+const flirty = [
+
+ {
+  q:"Pick your favorite kind of tension...",
+  a:["Eye contact 👀","Close hugs 🫂","Whispering 😏","Late-night texting 🌙"]
+ },
+
+ {
+  q:"What is more attractive?",
+  a:["A cute smile","Confidence","Good voice","That LOOK 👀"]
+ },
+
+ {
+  q:"If we were alone on a late-night date...",
+  a:["Talk for hours","Watch a movie","Cuddle","See where the vibe goes 😏"]
+ },
+
+ {
+  q:"Which one would make you blush?",
+  a:["'You look beautiful'","'Come closer'","A forehead kiss","A long stare"]
+ },
+
+ {
+  q:"Be honest... who's more likely to start trouble?",
+  a:["Me 😇","You 😈","Both","Depends on the mood"]
+ }
+
+];
+
+let flirtIndex=0;
+
+function loadFlirty(){
+
+  const q=flirty[flirtIndex];
+
+  document.getElementById("flirtyQuestion").innerText=q.q;
+
+  const box=document.getElementById("flirtyOptions");
+
+  box.innerHTML="";
+
+  q.a.forEach((x)=>{
+
+    const b=document.createElement("button");
+
+    b.className="option";
+    b.innerText=x;
+
+    b.onclick=()=>{
+
+      [...box.children].forEach(y=>y.disabled=true);
+
+      document.getElementById("flirtyResult").innerText=
+        "Interesting choice... 👀";
+
+      addScore(5);
+
+      setTimeout(()=>{
+
+        flirtIndex++;
+
+        if(flirtIndex<flirty.length){
+
+          document.getElementById("flirtyResult").innerText="";
+          loadFlirty();
+
+        }else{
+
+          document.getElementById("flirtyResult").innerText=
+            "Okay... I definitely learned something 😏❤️";
+
+          document.getElementById("next3").style.display="inline-block";
+
+        }
+
+      },750);
+    };
+
+    box.appendChild(b);
+
+  });
+}
+
+loadFlirty();
+
+/* =========================
+   GAME 4 TAP
+========================= */
+
+let tapRunning=false;
+let tapScore=0;
+let tapSeconds=20;
+let tapTimer;
+
+const tapCircle=document.getElementById("tapCircle");
+
+tapCircle.onclick=()=>{
+
+  if(!tapRunning){
+
+    startTap();
+    return;
+
+  }
+
+  tapScore++;
+
+  document.getElementById("tapScore").innerText=tapScore;
+
+  tapCircle.style.transform="scale(.9)";
+
+  setTimeout(()=>{
+    tapCircle.style.transform="";
+  },80);
+};
+
+function startTap(){
+
+  tapRunning=true;
+  tapScore=0;
+  tapSeconds=20;
+
+  tapCircle.innerText="TAP!";
+  document.getElementById("tapScore").innerText=0;
+  document.getElementById("tapTime").innerText=20;
+
+  tapTimer=setInterval(()=>{
+
+    tapSeconds--;
+
+    document.getElementById("tapTime").innerText=tapSeconds;
+
+    if(tapSeconds<=0){
+
+      clearInterval(tapTimer);
+      tapRunning=false;
+
+      addScore(Math.min(30,tapScore));
+
+      tapCircle.innerText="DONE ❤️";
+
+      setTimeout(()=>{
+        document.getElementById("next4").style.display="inline-block";
+      },500);
+    }
+
+  },1000);
+}
+
+/* =========================
+   GAME 5 CATCH
+========================= */
+
+let caught=0;
+let catchInterval;
+
+function spawnCatchHeart(){
+
+  const area=document.getElementById("catchArea");
+
+  if(caught>=15) return;
+
+  const h=document.createElement("div");
+
+  h.className="catchHeart";
+  h.innerText="❤️";
+
+  h.style.left=Math.random()*85+"%";
+  h.style.top=Math.random()*80+"%";
+
+  h.onclick=()=>{
+
+    caught++;
+
+    document.getElementById("caught").innerText=caught;
+
+    h.remove();
+
+    addScore(2);
+
+    if(caught>=15){
+
+      clearInterval(catchInterval);
+
+      document.getElementById("next5").style.display="inline-block";
+
+    }
+  };
+
+  area.appendChild(h);
+
+  setTimeout(()=>{
+    if(h.parentNode) h.remove();
+  },1100);
+}
+
+catchInterval=setInterval(spawnCatchHeart,650);
+
+/* =========================
+   GAME 6
+========================= */
+
+function calculateDanger(){
+
+  const flirt=Number(document.getElementById("flirtRange").value);
+  const attention=Number(document.getElementById("attentionRange").value);
+  const jealous=Number(document.getElementById("jealousRange").value);
+
+  const score=Math.round((flirt+attention+jealous)/3);
+
+  let text="";
+
+  if(score<30){
+    text="Sweet & innocent 😇";
+  }else if(score<55){
+    text="Cute but suspicious 👀";
+  }else if(score<75){
+    text="Certified trouble 😏";
+  }else{
+    text="ABSOLUTELY DANGEROUS 😈🔥";
+  }
+
+  document.getElementById("dangerResult").innerText=text;
+
+  addScore(Math.round(score/10));
+
+  document.getElementById("next6").style.display="inline-block";
+}
+
+/* =========================
+   GAME 7
+========================= */
+
+const truths=[
+
+ "What's one thing about me that you find ridiculously attractive?",
+
+ "What's something you've wanted to tell me but never did?",
+
+ "What's the cutest thing you imagine us doing together?",
+
+ "What's one compliment you'd be too shy to say face-to-face?",
+
+ "If I suddenly got really close to you, what would you do? 👀",
+
+ "What's one thing that instantly gives you butterflies?"
+
+];
+
+let truthIndex=0;
+
+document.getElementById("truthQuestion").innerText=truths[truthIndex];
+
+function truthAnswer(type){
+
+  const result=document.getElementById("truthResult");
+
+  if(type==="truth"){
+
+    result.innerText="Okay... now actually answer it honestly. 👀";
+
+  }else{
+
+    result.innerText="Ohhh, choosing chaos today? 😏";
+
+  }
+
+  addScore(5);
+
+  setTimeout(()=>{
+
+    truthIndex++;
+
+    if(truthIndex<truths.length){
+
+      document.getElementById("truthQuestion").innerText=
+        truths[truthIndex];
+
+      result.innerText="";
+
+    }else{
+
+      result.innerText=
+        "Okay, you've revealed enough secrets for one night 😭❤️";
+
+      document.getElementById("next7").style.display="inline-block";
+
+    }
+
+  },900);
+}
+
+/* =========================
+   FINAL
+========================= */
+
+function finish(){
+
+  const text=document.getElementById("finalText").value.trim();
+
+  if(!text){
+
+    document.getElementById("finalResult").innerText=
+      "You can't escape that easily 😭 Write something first.";
+
+    return;
+  }
+
+  addScore(20);
+
+  document.getElementById("finalResult").innerText=
+    "Saved in the imaginary vault forever. 🔐❤️";
+
+  setTimeout(()=>{
+
+    screens.forEach(s=>s.classList.remove("active"));
+
+    document.getElementById("end").classList.add("active");
+
+    document.getElementById("finalScore").innerText=
+      totalScore+" points ❤️";
+
+  },1000);
+}
+
+/* =========================
+   RESTART
+========================= */
+
+function restart(){
+  location.reload();
+}
+
+/* =========================
+   SWIPE NAVIGATION
+========================= */
+
+let touchStartX=0;
+let touchStartY=0;
+
+document.addEventListener("touchstart",e=>{
+
+  touchStartX=e.changedTouches[0].screenX;
+  touchStartY=e.changedTouches[0].screenY;
+
+},{passive:true});
+
+document.addEventListener("touchend",e=>{
+
+  const x=e.changedTouches[0].screenX;
+  const y=e.changedTouches[0].screenY;
+
+  const dx=x-touchStartX;
+  const dy=y-touchStartY;
+
+  if(Math.abs(dx)<80 || Math.abs(dx)<Math.abs(dy)) return;
+
+  if(dx<0){
+
+    if(current>=1 && current<8){
+      const next=current+1;
+
+      const nextButton=document.getElementById("next"+current);
+
+      if(nextButton && nextButton.style.display!=="none"){
+        go(next);
+      }
+    }
+
+  }
+
+},{passive:true});
+
+</script>
+
+</body>
+</html>
